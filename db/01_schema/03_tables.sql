@@ -32,11 +32,11 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ativo (
     data_atualizacao timestamp,
     -- Restrições
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 );
 
 ALTER SEQUENCE sistema_agua.ativo_global_id_seq OWNED BY sistema_agua.ativo.id_global;
@@ -46,11 +46,11 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ativo_pontual (
     geom GEOMETRY (POINTZ, 4326),
     rotacao_simbolo smallint CHECK (rotacao_simbolo BETWEEN 0 AND 360) DEFAULT 0,
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo);
 
 -- TABELA: ativo_linear
@@ -58,11 +58,11 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ativo_linear (
     geom GEOMETRY (LINESTRINGZ, 4326),
     comprimento_forma numeric GENERATED ALWAYS AS ((ST_LENGTH(geom))::numeric(8, 2)) STORED,
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo);
 
 -- TABELA: ativo_poligonal
@@ -71,11 +71,11 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ativo_poligonal (
     area_forma numeric GENERATED ALWAYS AS ((ST_AREA(geom))::numeric(8, 2)) STORED,
     perimetro_forma numeric GENERATED ALWAYS AS ((ST_PERIMETER(geom))::numeric(8, 2)) STORED,
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo);
 
 -- TABELA: valvula_retencao (Backflow)
@@ -85,14 +85,14 @@ CREATE TABLE IF NOT EXISTS sistema_agua.valvula_retencao (
     bloqueado boolean,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Antirrefluxo',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_ativo_agua_antirrefluxo (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_valvula_retencao (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: hidrante (Fire Hydrant)
@@ -111,20 +111,20 @@ CREATE TABLE IF NOT EXISTS sistema_agua.hidrante (
     status_adocao smallint,
     adotado_por varchar(64),
     adotado_em date,
-    FOREIGN KEY (fabricante) REFERENCES tipos.fabricante_hidrante_agua (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (diametro_secundario) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_atribuicao) REFERENCES tipos.tipo_atribuicao_hidrante (codigo),
-    FOREIGN KEY (status_adocao) REFERENCES tipos.status_adocao (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes_hidrante (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (diametro_secundario) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_atribuicao) REFERENCES catalogos.tipo_atribuicao_hidrante (codigo),
+    FOREIGN KEY (status_adocao) REFERENCES catalogos.status_adocao (codigo),
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Hidrante',
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_hidrante (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_hidrante (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: conexao (Fitting)
@@ -133,15 +133,15 @@ CREATE TABLE IF NOT EXISTS sistema_agua.conexao (
     diametro_secundario smallint CHECK (diametro_secundario BETWEEN 15 AND 1200),
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Conexão',
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (diametro_secundario) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_conexao_agua (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (diametro_secundario) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_conexao (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: valvula (Flow Valve / Registro)
@@ -152,15 +152,15 @@ CREATE TABLE IF NOT EXISTS sistema_agua.valvula (
     ultima_manutencao date,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Válvula de Fluxo',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_valvula (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_valvula (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: descarga (Flushing and Blow Off)
@@ -170,14 +170,14 @@ CREATE TABLE IF NOT EXISTS sistema_agua.descarga (
     ultima_manutencao date,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Descarga e Expurgo',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_descarga (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_descarga (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: interligacao (Interconnect)
@@ -188,13 +188,13 @@ CREATE TABLE IF NOT EXISTS sistema_agua.interligacao (
     emergencia boolean,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Interligação',
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_conexao_interligacao_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_interligacao (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: tubo_camisa (Pipe Casing)
@@ -204,15 +204,15 @@ CREATE TABLE IF NOT EXISTS sistema_agua.tubo_camisa (
     comprimento_medido numeric(8, 2) CHECK (comprimento_medido > 0),
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Tubo Camisa',
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_tubo_camisa (codigo),
-    FOREIGN KEY (tipo_enchimento) REFERENCES tipos.tipo_enchimento_tubo_camisa (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_estrutura_linear_tubo_camisa (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_tubo_camisa (codigo),
+    FOREIGN KEY (tipo_enchimento) REFERENCES catalogos.tipo_enchimento_tubo_camisa (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_tubo_camisa (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_linear);
 
 -- TABELA: valvula_pressao (Pressure Valve / VRP)
@@ -224,15 +224,15 @@ CREATE TABLE IF NOT EXISTS sistema_agua.valvula_pressao (
     ultima_manutencao date,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Válvula de Pressão',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_valvula_pressao (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_valvula_pressao (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: bomba (Pump / Conjunto Motobomba)
@@ -248,17 +248,17 @@ CREATE TABLE IF NOT EXISTS sistema_agua.bomba (
     operacional boolean,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Bomba',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro_succao) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (diametro_recalque) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_projeto) REFERENCES tipos.tipo_bomba_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_bomba (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro_succao) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (diametro_recalque) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_projeto) REFERENCES catalogos.tipo_bomba_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_bomba (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: ponto_coleta (Sample Station)
@@ -268,11 +268,11 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ponto_coleta (
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Ponto de Coleta',
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: ramal_predial (Service)
@@ -284,16 +284,16 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ramal_predial (
     fio_rastreador boolean, -- Tracer wire
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Ramal Predial',
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (material) REFERENCES tipos.material_ramal_agua (codigo),
-    FOREIGN KEY (tipo_projeto) REFERENCES tipos.tipo_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_linha_ramal_agua (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (material) REFERENCES catalogos.material_ramal_agua (codigo),
+    FOREIGN KEY (tipo_projeto) REFERENCES catalogos.tipo_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_ramal_predial (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_linear);
 
 -- TABELA: ligacao_agua (Service Connection)
@@ -304,13 +304,13 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ligacao_agua (
     hidrometro_instalado boolean DEFAULT false, -- Metered
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Ligação de Água',
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_ligacao_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_ligacao (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: hidrometro_predial (Service Meter)
@@ -322,26 +322,26 @@ CREATE TABLE IF NOT EXISTS sistema_agua.hidrometro_predial (
     id_ligacao_cliente varchar(50), -- Account ID
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Hidrômetro Predial',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_hidrometro_predial (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_hidrometro (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: territorio_atendimento (Service Territory)
 CREATE TABLE IF NOT EXISTS sistema_agua.territorio_atendimento (
     id_objeto serial,
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_poligonal);
 
 -- TABELA: valvula_ramal (Service Valve)
@@ -358,18 +358,18 @@ CREATE TABLE IF NOT EXISTS sistema_agua.valvula_ramal (
     indicador_coluna_valvula boolean DEFAULT false, -- Post indicator valve
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Válvula de Ramal',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_projeto) REFERENCES tipos.tipo_valvula_agua (codigo),
-    FOREIGN KEY (status_valvula) REFERENCES tipos.status_valvula_rede (codigo),
-    FOREIGN KEY (sentido_fechamento_horario) REFERENCES tipos.direcao_fechamento_valvula (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_valvula_ramal (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_projeto) REFERENCES catalogos.tipo_valvula_agua (codigo),
+    FOREIGN KEY (status_valvula) REFERENCES catalogos.status_valvula (codigo),
+    FOREIGN KEY (sentido_fechamento_horario) REFERENCES catalogos.direcao_fechamento_valvula (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_valvula_ramal (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: reservatorio (Storage)
@@ -380,13 +380,13 @@ CREATE TABLE IF NOT EXISTS sistema_agua.reservatorio (
     volume_m3 numeric,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Reservatório',
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_reservatorio (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_reservatorio (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: medidor_distrito (System Meter / Macromedidor)
@@ -398,15 +398,15 @@ CREATE TABLE IF NOT EXISTS sistema_agua.macromedidor (
     id_setor_abastecimento varchar(50), -- Account ID adaptado para sistema
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Macromedidor',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_macromedidor (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_macromedidor (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: valvula_manobra (System Valve)
@@ -423,18 +423,18 @@ CREATE TABLE IF NOT EXISTS sistema_agua.valvula_manobra (
     possui_bypass boolean,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Válvula de Manobra',
-    FOREIGN KEY (fabricante) REFERENCES tipos.tipos_fabricados (codigo),
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (tipo_projeto) REFERENCES tipos.tipo_valvula_agua (codigo),
-    FOREIGN KEY (status_valvula) REFERENCES tipos.status_valvula_rede (codigo),
-    FOREIGN KEY (sentido_fechamento_horario) REFERENCES tipos.direcao_fechamento_valvula (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_valvula_sistema (codigo),
+    FOREIGN KEY (fabricante) REFERENCES catalogos.fabricantes (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (tipo_projeto) REFERENCES catalogos.tipo_valvula_agua (codigo),
+    FOREIGN KEY (status_valvula) REFERENCES catalogos.status_valvula (codigo),
+    FOREIGN KEY (sentido_fechamento_horario) REFERENCES catalogos.direcao_fechamento_valvula (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_valvula_sistema (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: poco_artesiano (Well)
@@ -447,40 +447,53 @@ CREATE TABLE IF NOT EXISTS sistema_agua.poco (
     vazao_disponivel numeric,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Poço',
-    FOREIGN KEY (tipo_filtragem) REFERENCES tipos.tipo_filtragem_abastecimento (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_dispositivo_poco (codigo),
+    FOREIGN KEY (tipo_filtragem) REFERENCES catalogos.tipo_filtragem_abastecimento (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_agua_poco (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: limite_abastecimento (Water Supply Boundary)
 CREATE TABLE IF NOT EXISTS sistema_agua.limite_abastecimento (
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Limite de Abastecimento',
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_limite_abastecimento (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_limite_abastecimento (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
+) INHERITS (sistema_agua.ativo_poligonal);
+
+-- TABELA: limite_reservatorio (Water Storage Boundary)
+CREATE TABLE IF NOT EXISTS sistema_agua.limite_reservacao (
+    id_objeto serial,
+    id_ativo varchar(64) DEFAULT 'Limite de Reservatorio',
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_limite_reservatorio (codigo),
+    PRIMARY KEY (id_global),
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_poligonal);
 
 -- TABELA: limite_estacao_elevatoria (Water Pump Station Boundary)
 CREATE TABLE IF NOT EXISTS sistema_agua.limite_elevatoria (
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Limite de Elevatória',
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_limite_elevatoria_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_limite_elevatoria_agua (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_poligonal);
 
 -- TABELA: eta (Treatment Plant / Estação de Tratamento de Água)
@@ -492,14 +505,14 @@ CREATE TABLE IF NOT EXISTS sistema_agua.eta (
     tipo_filtragem smallint,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'ETA',
-    FOREIGN KEY (tipo_filtragem) REFERENCES tipos.tipo_filtragem_abastecimento (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_eta (codigo),
+    FOREIGN KEY (tipo_filtragem) REFERENCES catalogos.tipo_filtragem_abastecimento (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_estacao_tratamento_agua (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_pontual);
 
 -- TABELA: rede_distribuidora (Water Main)
@@ -511,14 +524,14 @@ CREATE TABLE IF NOT EXISTS sistema_agua.rede_distribuidora (
     fio_rastreador boolean,
     id_objeto serial,
     id_ativo varchar(64) DEFAULT 'Rede Distribuidora',
-    FOREIGN KEY (diametro) REFERENCES tipos.diametro_agua (codigo),
-    FOREIGN KEY (material) REFERENCES tipos.material_rede_agua (codigo),
-    FOREIGN KEY (tipo_projeto) REFERENCES tipos.tipo_agua (codigo),
-    FOREIGN KEY (tipo_ativo) REFERENCES tipos.tipo_linha_rede_distribuidora (codigo),
+    FOREIGN KEY (diametro) REFERENCES catalogos.diametro_agua (codigo),
+    FOREIGN KEY (material) REFERENCES catalogos.material_rede_agua (codigo),
+    FOREIGN KEY (tipo_projeto) REFERENCES catalogos.tipo_agua (codigo),
+    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_ativo_rede_agua (codigo),
     PRIMARY KEY (id_global),
-    FOREIGN KEY (situacao) REFERENCES tipos.ciclo_vida (codigo),
-    FOREIGN KEY (proprietario) REFERENCES tipos.proprietario_ativo (codigo),
-    FOREIGN KEY (responsavel_manutencao) REFERENCES tipos.gestor_ativo (codigo),
-    FOREIGN KEY (fonte_espacial) REFERENCES tipos.fonte_espacial (codigo),
-    FOREIGN KEY (confiabilidade_espacial) REFERENCES tipos.confiabilidade_espacial (codigo)
+    FOREIGN KEY (situacao) REFERENCES catalogos.ciclo_vida (codigo),
+    FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo),
+    FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo),
+    FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
+    FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
 ) INHERITS (sistema_agua.ativo_linear);
