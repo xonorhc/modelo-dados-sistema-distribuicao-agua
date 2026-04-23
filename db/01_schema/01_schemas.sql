@@ -1,0 +1,3 @@
+CREATE SCHEMA IF NOT EXISTS catalogos;
+
+CREATE SCHEMA IF NOT EXISTS sistema_agua;
