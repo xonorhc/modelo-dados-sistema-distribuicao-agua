@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS sistema_agua.interligacao (
     vazao_outorgada numeric,
     vazao_disponivel numeric,
     emergencia boolean DEFAULT FALSE,
-    FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_interligacao (codigo)
+    CONSTRAINT fk_tipo_ativo FOREIGN KEY (tipo_ativo) REFERENCES catalogos.tipo_interligacao (codigo)
 )
 INHERITS (
     sistema_agua.ativo_pontual
