@@ -1,16 +1,50 @@
 services:
-  db_dev:
+  db_cuiaba:
     image: postgis/postgis:15-3.3
-    container_name: postgis_dev
+    container_name: postgis_cuiaba
     environment:
-      POSTGRES_PASSWORD: senha_dev
-      POSTGRES_DB: postgis
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha_cuiaba
+      POSTGRES_DB: cuiaba
     ports:
       - "5435:5432"
     volumes:
+      - ./pgdata_cuiaba:/var/lib/postgresql/data
+      - ./downloads/db_cuiaba.sql:/docker-entrypoint-initdb.d/init.sql
+    deploy:
+      resources:
+        limits:
+          memory: 1200M
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cuiaba"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db_dev:
+    image: postgis/postgis:15-3.3
+    container_name: postgis_dev
+    depends_on:
+      db_cuiaba:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha_dev
+      POSTGRES_DB: postgis
+    ports:
+      - "5434:5432"
+    volumes:
       - ./pgdata_dev:/var/lib/postgresql/data
       - ./db:/docker-entrypoint-initdb.d
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10mb"
+    deploy:
+      resources:
+        limits:
+          memory: 800M
+          cpus: "1.0"
+        reservations:
+          memory: 128M
+          cpus: "0.20"
