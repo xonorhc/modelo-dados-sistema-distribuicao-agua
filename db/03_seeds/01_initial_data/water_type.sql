@@ -1,6 +1,7 @@
 -- TABELA: catalogos.tipo_agua
 INSERT INTO catalogos.tipo_agua (codigo, descricao)
 VALUES
+    (0, 'Desconhecido'),
     (1, 'Água Potável'),
     (2, 'Água de Irrigação'),
     (3, 'Água para Incêndio'),
