@@ -1,0 +1,26 @@
+-- TABELA: catalogos.tipo_conexao (Asset Type Water Junction Fitting)
+INSERT INTO catalogos.tipo_conexao (codigo, descricao)
+VALUES
+    (0, 'Desconhecido'),
+    (1, 'Abraçadeira'),
+    (2, 'Colar de Tomada'),
+    (3, 'Luva'),
+    (4, 'Cruzeta'),
+    (5, 'Curva'),
+    (6, 'Tampão'),
+    (7, 'Junta de Expansão'),
+    (8, 'Flange'),
+    (9, 'Tampão (Plug)'),
+    (10, 'Redução'),
+    (11, 'Cruzeta Reduzida'),
+    (12, 'Tê Reduzido'),
+    (13, 'Sela'),
+    (14, 'Parafuso'),
+    (15, 'Manga'),
+    (16, 'Tomada'),
+    (17, 'Sela de Derivação'),
+    (18, 'Luva de Derivação'),
+    (19, 'Tê'),
+    (20, 'Transição'),
+    (21, 'Solda'),
+    (22, 'Y');
