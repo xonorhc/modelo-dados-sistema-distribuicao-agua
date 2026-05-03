@@ -1,17 +1,6 @@
 BEGIN;
 
-INSERT INTO sistema_agua.hidrante (
-    tipo_ativo,
-    nome,
-    data_instalacao,
-    data_operacao,
-    proprietario,
-    responsavel_manutencao,
-    observacoes,
-    data_criacao,
-    data_atualizacao,
-    geom
-    )
+INSERT INTO sistema_agua.hidrante (tipo_ativo, nome, data_instalacao, data_operacao, proprietario, responsavel_manutencao, observacoes, data_criacao, data_atualizacao, geom)
 SELECT
     CASE WHEN tipohidrante = 'Coluna' THEN 1
          WHEN tipohidrante = 'Parede' THEN 2
@@ -24,8 +13,8 @@ SELECT
     coalesce(endereco, observacoes) AS observacoes,
     datacriacao AS data_criacao,
     dataatualizacao AS data_atualizacao,
-    ST_Transform (ST_GeometryN (geometry, 1), 4674) AS geom
+    ST_Transform (ST_GeometryN (geometry, 1), 31981) AS geom
 FROM legado."aHidrante"
 WHERE geometry IS NOT NULL;
 
-ROLLBACK;
+COMMIT;

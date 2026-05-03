@@ -1,19 +1,6 @@
 BEGIN;
 
-INSERT INTO sistema_agua.conexao (
-     tipo_ativo,
-     data_instalacao,
-     data_operacao,
-     proprietario,
-     responsavel_manutencao,
-     observacoes,
-     data_criacao,
-     data_atualizacao,
-     geom,
-     rotacao_simbolo,
-     diametro,
-     diametro_secundario
-     )
+INSERT INTO sistema_agua.conexao (tipo_ativo, data_instalacao, data_operacao, proprietario, responsavel_manutencao, observacoes, data_criacao, data_atualizacao, geom, rotacao_simbolo, diametro, diametro_secundario)
 SELECT
     CASE WHEN tipoconexao = 'Adaptador' THEN 20
          WHEN tipoconexao = 'CAP' THEN 6
@@ -34,7 +21,7 @@ SELECT
     coalesce(descloc, observacoes) AS observacoes,
     datacriacao AS data_criacao,
     dataatualizacao AS data_atualizacao,
-    ST_Transform (ST_GeometryN (geometry, 1), 4674) AS geom,
+    ST_Transform (ST_GeometryN (geometry, 1), 31981) AS geom,
     CASE WHEN rotacao BETWEEN 0 AND 360 THEN round(rotacao) ELSE 0 END AS rotacao_simbolo,
     CASE WHEN diametroentrada < 20 THEN 15
          WHEN diametroentrada BETWEEN 20 AND 24 THEN 20
@@ -91,4 +78,4 @@ SELECT
 FROM legado."aConexao"
 WHERE tipoconexao != 'Ventosa';
 
-ROLLBACK;
+COMMIT;

@@ -1,18 +1,6 @@
 BEGIN;
 
-INSERT INTO sistema_agua.valvula_pressao (
-    tipo_ativo,
-    data_instalacao,
-    data_operacao,
-    proprietario,
-    responsavel_manutencao,
-    observacoes,
-    data_criacao,
-    data_atualizacao,
-    geom,
-    rotacao_simbolo,
-    diametro
-  )
+INSERT INTO sistema_agua.valvula_pressao (tipo_ativo, data_instalacao, data_operacao, proprietario, responsavel_manutencao, observacoes, data_criacao, data_atualizacao, geom, rotacao_simbolo, diametro)
 SELECT
     CASE WHEN funcaovalvula = 'ControleMonitoramentoPressao' THEN 7
          WHEN funcaovalvula = 'MonitoramentoPressao' THEN 4
@@ -26,7 +14,7 @@ SELECT
     coalesce(descloc, observacoes) AS observacoes,
     datacriacao AS data_criacao,
     dataatualizacao AS data_atualizacao,
-    ST_Transform (ST_GeometryN (geometry, 1), 4674) AS geom,
+    ST_Transform (ST_GeometryN (geometry, 1), 31981) AS geom,
     CASE WHEN rotacao BETWEEN 0 AND 360 THEN round(rotacao) ELSE 0 END AS rotacao_simbolo,
     CASE WHEN diametro < 20 THEN 15
          WHEN diametro BETWEEN 20 AND 24 THEN 20
@@ -57,4 +45,4 @@ SELECT
 FROM legado."aValvula"
 WHERE tipovalvula = 'RedutoraPressao';
 
-ROLLBACK;
+COMMIT;
