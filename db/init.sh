@@ -28,8 +28,8 @@ run_sql_recursive "/docker-entrypoint-initdb.d/02_functions"
 run_sql_recursive "/docker-entrypoint-initdb.d/03_seeds"
 
 # 5. Migrations (se houver)
-# if [ -d "/docker-entrypoint-initdb.d/04_migrations" ]; then
-#   run_sql_recursive "/docker-entrypoint-initdb.d/04_migrations"
-# fi
+if [ -d "/docker-entrypoint-initdb.d/04_migrations" ]; then
+  run_sql_recursive "/docker-entrypoint-initdb.d/04_migrations"
+fi
 
 echo ">> Finalizado com sucesso!"

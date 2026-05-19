@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ativo (
     fonte_espacial smallint DEFAULT 0,
     confiabilidade_espacial smallint DEFAULT 0,
     latitude numeric(9, 7),
-    longitude numeric(9, 7),
+    longitude numeric(10, 7),
     altitude numeric(6, 3),
     -- Auditoria
     usuario_criacao varchar(255),
@@ -29,12 +29,13 @@ CREATE TABLE IF NOT EXISTS sistema_agua.ativo (
     usuario_atualizacao varchar(255),
     data_atualizacao timestamptz,
     -- Restrições
-    CONSTRAINT fk_id_global PRIMARY KEY (id_global),
-    CONSTRAINT fk_situacao FOREIGN KEY (situacao) REFERENCES catalogos.situacoes (codigo),
-    CONSTRAINT fk_proprietario FOREIGN KEY (proprietario) REFERENCES catalogos.proprietarios (codigo),
-    CONSTRAINT fk_responsavel_manutencao FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestores (codigo),
-    CONSTRAINT fk_fonte_espacial FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo),
-    CONSTRAINT fk_confiabilidade_espacial FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo)
+    CONSTRAINT pk_ativo_id_global PRIMARY KEY (id_global),
+    CONSTRAINT fk_ativo_situacao FOREIGN KEY (situacao) REFERENCES catalogos.situacoes (codigo) ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_ativo_proprietario FOREIGN KEY (proprietario) REFERENCES catalogos.proprietario_ativo (codigo) ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_ativo_responsavel_manutencao FOREIGN KEY (responsavel_manutencao) REFERENCES catalogos.gestor_ativo (codigo) ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_ativo_fonte_espacial FOREIGN KEY (fonte_espacial) REFERENCES catalogos.fonte_espacial (codigo) ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_ativo_confiabilidade_espacial FOREIGN KEY (confiabilidade_espacial) REFERENCES catalogos.confiabilidade_espacial (codigo) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 ALTER SEQUENCE sistema_agua.ativo_id_global_seq OWNED BY sistema_agua.ativo.id_global;
+
