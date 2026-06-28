@@ -1,6 +1,0 @@
--- TABELA: catalogos.gestor_ativo (Manager)
-CREATE TABLE IF NOT EXISTS catalogos.gestor_ativo (
-    codigo smallint PRIMARY KEY,
-    descricao varchar(64) NOT NULL,
-    detalhes varchar(255)
-);

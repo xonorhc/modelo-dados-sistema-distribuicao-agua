@@ -12,7 +12,7 @@ Este repositório contém a modelagem conceitual, lógica e física de um sistem
 
 O banco de dados está organizado em dois esquemas principais para garantir a separação de responsabilidades:
 
-1. **`catalogos`**: Contém tabelas de referência (domínios) como tipos de materiais, diâmetros, fabricantes e situações de ciclo de vida.
+1. **`catalogo`**: Contém tabelas de referência (domínios) como tipos de materiais, diâmetros, fabricantes e situações de ciclo de vida.
 2. **`sistema_agua`**: Contém as entidades operacionais e os ativos da rede.
 
 ### Herança de Tabelas
